@@ -12,7 +12,9 @@ class ListViewController: UICollectionViewController {
 
     private var pokemons: [Pokemon] = []
     private var resultPokemons: [Pokemon] = []
-
+    private var currentPokemon: Pokemon?
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     // TODO: Use UserDefaults to pre-load the latest search at start
 
     private var latestSearch: String?
@@ -101,32 +103,63 @@ class ListViewController: UICollectionViewController {
         cell.pokemon = resultPokemons[indexPath.item]
         return cell
     }
+    /*override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("Click: \(resultPokemons[indexPath.item])")
+        currentPokemon = resultPokemons[indexPath.item]
+        performSegue(withIdentifier: "goDetailViewControllerSegue", sender: self)
+    }*/
 
     // MARK: - Navigation
 
     // TODO: Handle navigation to detail view controller
-
+    /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destino = segue.destination as? DetailViewController {
+            destino.pokemon = self.currentPokemon
+        }
+    }*/
+    //Revisar error de perform segue twice sol: https://ajpagente.github.io/mobile/002/
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+      if segue.identifier == "goDetailViewControllerSegue" {
+        if let cell = sender as? UICollectionViewCell, let indexPath = self.collectionView.indexPath(for: cell){
+          let controller = segue.destination as! DetailViewController
+            controller.pokemon = resultPokemons[indexPath.item]
+        }
+      }
+    }
     // MARK: - UI Hooks
 
-    @objc func refresh() {
+    @objc func refresh(){
         shouldShowLoader = true
-
+        let group = DispatchGroup()//Se agrego para realizar la espera
+        
         var pokemons: [Pokemon] = []
 
         // TODO: Wait for all requests to finish before updating the collection view
-
+        activityIndicator.startAnimating()
         PokeAPI.shared.get(url: "pokemon?limit=30", onCompletion: { (list: PokemonList?, _) in
             guard let list = list else { return }
             list.results.forEach { result in
+                group.enter()//Se inicia
                 PokeAPI.shared.get(url: "/pokemon/\(result.id)/", onCompletion: { (pokemon: Pokemon?, _) in
                     guard let pokemon = pokemon else { return }
+                    //print(pokemon)
+                   
                     pokemons.append(pokemon)
                     self.pokemons = pokemons
-                    self.didRefresh()
+                    group.leave()//termina
                 })
             }
-        })
+            group.notify(queue: .main) {//Se notifica al hilo principal para actualizar
+                // all data available, continue
+                self.activityIndicator.stopAnimating()
+                self.activityIndicator.hidesWhenStopped = true
+            self.didRefresh()
+        }
+        }
+        )
+
     }
+   
 
     private func didRefresh() {
         shouldShowLoader = false

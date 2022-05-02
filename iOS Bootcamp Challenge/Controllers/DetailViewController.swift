@@ -18,7 +18,6 @@ class DetailViewController: UIViewController {
         gradient.frame = view.bounds
         return gradient
     }
-
     var pokemon: Pokemon?
 
     lazy private var closeButon: UIButton = {
@@ -77,7 +76,7 @@ class DetailViewController: UIViewController {
         // abilities
         if let abilities = pokemon.abilities {
             let title = "Abilities"
-            let description = abilities.joined(separator: "\n")
+            let description = abilities.joined(separator: ",")
             let item = Item(title: title, description: description)
             items.append(item)
         }
@@ -99,8 +98,10 @@ class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewDidLoad")
         setup()
         setupUI()
+ 
     }
 
     private func setup() {

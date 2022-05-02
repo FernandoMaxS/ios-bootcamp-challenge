@@ -19,7 +19,32 @@ class CardView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    lazy private var subTitleLabel: [UILabel] = {
+        var labels:[UILabel] = []
+        for i in 0..<4{
+            let label = UILabel()
+            label.textAlignment = .right
+            label.font = UIFont.systemFont(ofSize: 22, weight: .medium)
+            label.textColor = .black
+            label.translatesAutoresizingMaskIntoConstraints = false
+            labels.append(label)
+        }
+        
+        return labels
+    }()
+    lazy private var descriptionLabel: [UILabel] = {
+        var labels:[UILabel] = []
+        for i in 0..<4{
+            let label = UILabel()
+            label.textAlignment = .right
+            label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+            label.textColor = .black
+            label.translatesAutoresizingMaskIntoConstraints = false
+            labels.append(label)
+        }
+        
+        return labels
+    }()
     required init(card: Card) {
         self.card = card
         super.init(frame: .zero)
@@ -35,12 +60,18 @@ class CardView: UIView {
 
     private func setup() {
         guard let card = card else { return }
-
-        card.items.forEach { _ in }
+        
+        var index = 0
+        card.items.forEach { item in
+            subTitleLabel[index].text = item.title
+            descriptionLabel[index].text = item.description
+            index += 1
+        }
 
         titleLabel.text = card.title
         backgroundColor = .white
         layer.cornerRadius = 20
+
     }
 
     private func setupUI() {
@@ -50,6 +81,20 @@ class CardView: UIView {
         titleLabel.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.70).isActive = true
 
         // TODO: Display pokemon info (eg. types, abilities)
+    
+        
+        for i in 0..<4{
+            addSubview(subTitleLabel[i])
+            subTitleLabel[i].topAnchor.constraint(equalTo: self.topAnchor, constant: margin * CGFloat((i+3))).isActive = true
+            subTitleLabel[i].leftAnchor.constraint(equalTo: self.leftAnchor, constant: margin).isActive = true
+            subTitleLabel[i].widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.90).isActive = true
+            
+            addSubview(descriptionLabel[i])
+            descriptionLabel[i].topAnchor.constraint(equalTo: self.topAnchor, constant: margin * CGFloat((i+3))).isActive = true
+            descriptionLabel[i].leftAnchor.constraint(equalTo: self.leftAnchor, constant: margin*7).isActive = true
+            descriptionLabel[i].widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.90).isActive = true
+        }
+        
     }
 
 }

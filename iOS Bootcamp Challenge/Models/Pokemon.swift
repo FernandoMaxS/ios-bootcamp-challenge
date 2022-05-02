@@ -26,9 +26,26 @@ enum PokemonType: String, Decodable, CaseIterable, Identifiable {
     case ground = "Ground"
 
 }
+struct abilitiesAux: Decodable, Equatable{
+    let ability: abilityAux
+    let is_hidden: Bool
+    let slot: Int
 
+}
+struct abilityAux: Decodable, Equatable {
+    let name: String
+    let url: String
+}
+struct typesAux: Decodable, Equatable {
+    let slot: Int
+    let type: typeAux
+}
+struct typeAux: Decodable, Equatable{
+    let name: String
+    let url: String
+}
 struct Pokemon: Decodable, Equatable {
-
+ 
     let id: Int
     let name: String
     let image: String?
@@ -47,7 +64,7 @@ struct Pokemon: Decodable, Equatable {
         case other
         case officialArtwork = "official-artwork"
         case frontDefault = "front_default"
-        case abilities
+        case abilities 
         case ability
         case weight
         case baseExperience = "base_experience"
@@ -63,10 +80,28 @@ struct Pokemon: Decodable, Equatable {
         self.image = try? officialArtWork.decode(String.self, forKey: .frontDefault)
 
         // TODO: Decode list of types & abilities
+        //https://pokeapi.co/api/v2/type/
+        //https://pokeapi.co/api/v2/ability/
+ 
+        /*let aux = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .abilities)
+        let aux2 = try aux.nestedContainer(keyedBy: CodingKeys.self, forKey: .ability)*/
 
-        self.types = []
-        self.abilities = []
-
+        
+        //self.types = try? container.decode([String].self, forKey: .types)
+        //self.abilities = []
+        var array: [String] = []
+        var arrayTypes: [String] = []
+        let aux:[abilitiesAux] = try container.decode([abilitiesAux].self, forKey: .abilities)
+        aux.forEach { ability in
+            array.append(ability.ability.name)
+        }
+     
+        let auxTypes:[typesAux] = try container.decode([typesAux].self, forKey: .types)
+        auxTypes.forEach { type in
+            arrayTypes.append(type.type.name)
+        }
+        self.abilities = array
+        self.types = arrayTypes
         self.weight = try container.decode(Float.self, forKey: .weight)
         self.baseExperience = try container.decode(Int.self, forKey: .baseExperience)
     }

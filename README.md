@@ -13,15 +13,15 @@ The topics covered by the challenge are:
 The `ListViewController` contains a collection of `PokeCell` which display a list of Pokemons to the user.
 You need to handle the PokeApi to retrieve each Pokemon detail.
 
-    // TODO: Implements generics to merge this methods into one
-    // TODO: Decode list of types & abilities
+    // TODO: Implements generics to merge this methods into one -> LISTO revisar PokeAPI.swift
+    // TODO: Decode list of types & abilities -> DUDA revisar Pokemon.swfit
 
 
 ### Concurrency
 Requests in the project take different times to return data!
 Make sure you are finished downloading all pokemons before updating the `CollectionView`
 
-    // TODO: Wait for all requests to finish before updating the collection view
+    // TODO: Wait for all requests to finish before updating the collection view ->Listo
 
 
 ### Patterns and Architecture
@@ -32,14 +32,14 @@ to allow the user to search and select a Pokemon from the ListViewController to 
 
 You can encapsulate your components in the same file or create more files in the project.
 
-    // TODO: Handle navigation to detail view controller
+    // TODO: Handle navigation to detail view controller ->BUG
 
 
 ### Views & Layouts
 Let's display the Pokemons details like the image, type, and attacks. Whatever you wanna display.
 We provided a start UI using Layout Constraints in the code, but feel free to use Frames or the Storyboard!
 
-    // TODO: Display pokemon info (eg. types, abilities)
+    // TODO: Display pokemon info (eg. types, abilities)->LISTO
 
 
 #### Extras
@@ -47,7 +47,7 @@ If you have time left address the extra TODO's inside the project to show off yo
     
     // TODO: Implement the SearchBar
     // TODO: Use UserDefaults to pre-load the latest search at start
-    // TODO: Add a loading indicator when the app first launches and has no pokemons
+    // TODO: Add a loading indicator when the app first launches and has no pokemons ->LISTO
 
 
 ## Code Review Process
